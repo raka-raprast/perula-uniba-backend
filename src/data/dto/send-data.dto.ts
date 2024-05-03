@@ -15,7 +15,4 @@ export class SendDataDto {
   readonly fanStatus: boolean;
   @IsNotEmpty()
   readonly heaterStatus: boolean;
-  @IsNotEmpty()
-  @IsString()
-  readonly addedTime: string;
 }
