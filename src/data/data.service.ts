@@ -42,6 +42,12 @@ export class DataService {
     //   15,
     //   getDataDto.userId,
     // );
-    return this.dataList.filter((item) => item.userId == getDataDto.userId);
+    return this.dataList
+      .filter((item) => item.userId == getDataDto.userId)
+      .sort((a, b) => {
+        const timeA = new Date(a.addedTime).getTime();
+        const timeB = new Date(b.addedTime).getTime();
+        return timeA - timeB;
+      });
   }
 }
