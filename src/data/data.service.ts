@@ -37,12 +37,12 @@ export class DataService {
 
   async getData(getDataDto: GetDataDto) {
     // TODO: Handle Pagination
-    // const existingData = this.getDataForPage(
-    //   getDataDto.page,
-    //   15,
-    //   getDataDto.userId,
-    // );
-    return this.dataList
+    const existingData = this.getDataForPage(
+      getDataDto.page,
+      50,
+      getDataDto.userId,
+    );
+    return existingData
       .filter((item) => item.userId == getDataDto.userId)
       .sort((a, b) => {
         const timeA = new Date(a.addedTime).getTime();
