@@ -63,7 +63,7 @@ export class ControlService {
       updateControlDto.toolId,
       updateData,
     );
-    console.log(updateData);
+    // console.log(updateData);
     return updateData;
   }
 }

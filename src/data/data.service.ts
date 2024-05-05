@@ -12,15 +12,27 @@ export class DataService {
   dataList: Data[] = [];
   getDataForPage(pageNumber, pageSize, userId) {
     const startIndex = (pageNumber - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return this.dataList
+    let endIndex = 0;
+    if (this.dataList.length <= pageSize) {
+      endIndex = this.dataList.length;
+    } else {
+      endIndex = startIndex + pageSize;
+    }
+    // console.log(this.dataList.length);
+    console.log('dataListLength:');
+    console.log(this.dataList.length);
+    console.log('endIndex:');
+    console.log(endIndex);
+    const existingData = this.dataList
       .filter((item) => item.userId == userId)
-      .slice(startIndex, endIndex);
+      .slice(0, endIndex);
+    // console.log(existingData);
+    return existingData;
   }
   async sendData(sendDataDto: SendDataDto): Promise<any> {
     const dateTime = new Date();
-    console.log('Date time');
-    console.log(dateTime);
+    // console.log('Date time');
+    // console.log(dateTime);
     const newData = {
       userId: sendDataDto.userId,
       toolId: sendDataDto.toolId,
@@ -31,23 +43,24 @@ export class DataService {
       addedTime: dateTime.toISOString(),
     };
     await this.dataList.push(newData);
-    console.log(this.dataList);
+    // console.log(this.dataList);
     return newData;
   }
 
   async getData(getDataDto: GetDataDto) {
     // TODO: Handle Pagination
-    // const existingData = this.getDataForPage(
-    //   getDataDto.page,
-    //   50,
-    //   getDataDto.userId,
-    // );
-    return this.dataList
-      .filter((item) => item.userId == getDataDto.userId)
-      .sort((a, b) => {
-        const timeA = new Date(a.addedTime).getTime();
-        const timeB = new Date(b.addedTime).getTime();
-        return timeA - timeB;
-      });
+    const existingData = this.getDataForPage(
+      getDataDto.page,
+      10,
+      getDataDto.userId,
+    ).sort((a, b) => {
+      const timeA = new Date(a.addedTime).getTime();
+      const timeB = new Date(b.addedTime).getTime();
+      return timeA - timeB;
+    });
+    return {
+      isReachedMax: getDataDto.page * 10 >= this.dataList.length,
+      data: existingData,
+    };
   }
 }
